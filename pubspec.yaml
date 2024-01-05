@@ -14,7 +14,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  geolocator: ^8.0.5
+  geolocator: ">=10.0.0"
 
 
 
@@ -39,4 +39,3 @@ flutter:
         pluginClass: FlutterStableGeoFencePlugin
       ios:
         pluginClass: FlutterStableGeoFencePlugin
-
