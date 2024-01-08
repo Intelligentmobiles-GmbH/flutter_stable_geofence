@@ -111,9 +111,9 @@ class GeoFenceService {
     return currentLocation;
   }
 
-  void stopFenceService() {
+  Future<void> stopFenceService() async {
     try {
-      _positionStream?.cancel();
+      return _positionStream?.cancel();
     } catch (error) {
       print("Error while stopping the FenceService : ${error.toString()}");
     }
