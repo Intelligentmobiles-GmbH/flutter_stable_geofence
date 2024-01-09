@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:flutter/services.dart';
@@ -8,9 +7,8 @@ import 'dart:io' show Platform;
 import 'geo_fence_status.dart';
 
 class GeoFenceService {
-
   final StreamController<GeoFenceStatus> _geoFenceController =
-  StreamController();
+      StreamController();
 
   Stream<GeoFenceStatus> get geoFenceStatusListener =>
       _geoFenceController.stream;
@@ -23,7 +21,8 @@ class GeoFenceService {
   late double _radius;
   Position? currentLocation;
 
-  static const MethodChannel _channel = MethodChannel('flutter_stable_geo_fence');
+  static const MethodChannel _channel =
+      MethodChannel('flutter_stable_geo_fence');
 
   static Future<String?> get platformVersion async {
     final String? version = await _channel.invokeMethod('getPlatformVersion');
@@ -83,22 +82,25 @@ class GeoFenceService {
 
     _positionStream =
         Geolocator.getPositionStream(locationSettings: locationSettings).listen(
-              (Position? position) {
-            if (position != null) {
-              currentLocation = position;
-              final distance = geDistance(position.latitude, position.longitude, _fenceLatitude, _fenceLongitude);
-              Status status = distance <= _radius ? Status.ENTER : Status.EXIT;
-              if (_status != status) {
-                _status = status;
-                final geoFenceStatus = GeoFenceStatus(status: _status);
-                geoFenceStatus.latitude = position.latitude;
-                geoFenceStatus.longitude = position.longitude;
-                geoFenceStatus.distance = distance;
-                _geoFenceController.add(geoFenceStatus);
-              }
-            }
-          },
-        );
+      (Position? position) {
+        if (position != null) {
+          currentLocation = position;
+          final distance = geDistance(position.latitude, position.longitude,
+              _fenceLatitude, _fenceLongitude);
+          Status status = distance <= _radius ? Status.ENTER : Status.EXIT;
+          if (_status != status) {
+            _status = status;
+            final geoFenceStatus = GeoFenceStatus(status: _status);
+            geoFenceStatus.latitude = position.latitude;
+            geoFenceStatus.longitude = position.longitude;
+            geoFenceStatus.fence_latitude = _fenceLatitude;
+            geoFenceStatus.fence_longitude = _fenceLongitude;
+            geoFenceStatus.distance = distance;
+            _geoFenceController.add(geoFenceStatus);
+          }
+        }
+      },
+    );
   }
 
   ///It will return the status of the user i.e whether it is inside or outside the Fence area
